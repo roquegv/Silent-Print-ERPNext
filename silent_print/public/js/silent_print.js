@@ -11,15 +11,22 @@ frappe.require('assets/js/point-of-sale.min.js', function() {
                 silent_print_format: frm.pos_print_format,
             },
             callback: (r) => {
-                var print_type = "";
-                frappe.db.get_value("Silent Print Format", frm.pos_print_format, "default_print_type").then((res)=>{
-                    print_type = res.message.default_print_type
+                if(r.message){
                     printService.submit({
-                        'type': print_type,
+                        'type': r.message.print_type,
                         'url': 'file.pdf',
-                        'file_content': r.message
+                        'file_content': r.message.pdf_base64
                     });
-                })
+                } else {
+                    const frm = this.events.get_frm();
+                    frappe.utils.print(
+                        this.doc.doctype,
+                        this.doc.name,
+                        frm.pos_print_format,
+                        this.doc.letter_head,
+                        this.doc.language || frappe.boot.lang
+                    );
+                }
             }
         })
     }
