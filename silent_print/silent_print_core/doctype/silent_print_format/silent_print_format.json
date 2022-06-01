@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "autoname": "field:print_format",
  "creation": "2022-05-31 10:50:23.542519",
  "doctype": "DocType",
@@ -8,7 +9,8 @@
   "print_format",
   "page_size",
   "custom_width",
-  "custom_height"
+  "custom_height",
+  "default_print_type"
  ],
  "fields": [
   {
@@ -40,9 +42,16 @@
    "in_list_view": 1,
    "label": "Page Size",
    "options": "A0\nA1\nA2\nA3\nA4\nA5\nA6\nA7\nA8\nA9\nB0\nB1\nB2\nB3\nB4\nB5\nB6\nB7\nB8\nB9\nB10\nC5E\nComm10E\nDLE\nExecutive\nFolio\nLedger\nLegal\nLetter\nTabloid\nCustom"
+  },
+  {
+   "description": "This is the label used to identify the printer in the Webapp Hardware Bridge",
+   "fieldname": "default_print_type",
+   "fieldtype": "Data",
+   "label": "Default Print Type"
   }
  ],
- "modified": "2022-05-31 11:08:26.159889",
+ "links": [],
+ "modified": "2022-06-01 11:21:24.836495",
  "modified_by": "Administrator",
  "module": "Silent Print Core",
  "name": "Silent Print Format",

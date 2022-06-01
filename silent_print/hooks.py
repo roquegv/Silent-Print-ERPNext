@@ -127,3 +127,8 @@ app_license = "MIT"
 # 	"Task": "silent_print.task.get_dashboard_data"
 # }
 
+# injected in desk.html
+# app_include_js = "assets/js/silent_print.min.js"
+# app_include_css = "assets/js/app.min.css"
+
+page_js = {"point-of-sale" : "public/js/silent_print.js"}
