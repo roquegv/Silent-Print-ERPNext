@@ -10,15 +10,20 @@ So far, this app covers the following scenarios:
 1. Printing from standard Point of Sale (POS)
 2. Printing from any document via Custom Script
 
+## How to install it
+Like any other standard frappe app:
+1. bench get-app https://github.com/roquegv/Silent-Print-ERPNext
+2. bench install-app silent_print
+
 ## How to use it
 
-First, install the Webapp Hardware Bridge in the computer which has conection to the printers.
+First, install the Webapp Hardware Bridge (WHB) in the computer which has conection to the printers.
 
-### Instalation in Windows
+### WHB Instalation in Windows
 1. Go to the [realeses' page](https://github.com/imTigger/webapp-hardware-bridge/releases) and download the last version's .exe (in this case it is v0.14.0). 
 2. Run the file.
 
-### Configuration
+### WHB Configuration
 After the instalation finnishes, in the Windows home panel, search for the Webapp Hardware Bridge Configurator.
 ![webapp hardware bridge configurator](webapp-hardware-bridge-configurator.png)
 
