@@ -149,8 +149,10 @@ function WebSocketPrinter (options) {
 This creates a custom button and send the print order to the bridge, via web socket.
 
 ## Comming features
-1. Print to multiple printers
-2. Print from any device
+1. Print to multiple printers at the same time
+2. Print from any device (even from the ones that are not connected to the printers)
+3. Print automatically after some document event (e.g. creation)
+4. POS Awesome integration (?)
 
 #### License
 
