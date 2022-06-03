@@ -2,7 +2,7 @@
 frappe.require('assets/js/point-of-sale.min.js', function() {
     erpnext.PointOfSale.PastOrderSummary.prototype.print_receipt =  function(parent) {
         const frm = this.events.get_frm();
-        var printService = new WebSocketPrinter();
+        var printService = new frappe.silent_print.WebSocketPrinter();
         frappe.call({
             method: 'silent_print.utils.print_format.create_pdf',
             args: {
