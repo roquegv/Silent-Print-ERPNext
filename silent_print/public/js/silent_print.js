@@ -32,7 +32,8 @@ frappe.require('assets/js/point-of-sale.min.js', function() {
     }
 })
 
-var WebSocketPrinter = function (options) {
+frappe.provide("frappe.silent_print");
+frappe.silent_print.WebSocketPrinter = function (options) {
     var defaults = {
         url: "ws://127.0.0.1:12212/printer",
         onConnect: function () {
