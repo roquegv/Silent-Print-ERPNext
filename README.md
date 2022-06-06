@@ -61,19 +61,20 @@ That is, after you completed the order, you can "Print Receipt" and it will prin
 ### Printing from any document via Custom Script
 To be able to print form any document, follow these steps:
 1. Create a New Custom Script
-2. Select the Doctype (e.g. Sales Invoice); "Apply To" = "Form"; "Enabled" = "on"
+2. Select the Doctype (e.g. POS Invoice); "Apply To" = "Form"; "Enabled" = "on"
 3. Copy and paste the following code:
+
 ```
-frappe.ui.form.on('Sales Invoice', {
+frappe.ui.form.on('POS Invoice', {
 	refresh(frm) {
 		frm.add_custom_button('PRINT SILENTLY TO PRINTER 1', () => {send2bridge(frm, "POS Invoice", "PRINTER 1")})
-        frm.add_custom_button('PRINT SILENTLY TO PRINTER 2', () => {send2bridge(frm, "POS Invoice", "PRINTER 2")})
+		frm.add_custom_button('PRINT SILENTLY TO PRINTER 2', () => {send2bridge(frm, "Standard", "PRINTER 2")})
 	}
 })
 
 var send2bridge = function (frm, print_format, print_type){
-    // initialice the web socket for the bridge
-    var printService = new frappe.silent_print.WebSocketPrinter();
+	// initialice the web socket for the bridge
+	var printService = new frappe.silent_print.WebSocketPrinter();
 	frappe.call({
 		method: 'silent_print.utils.print_format.create_pdf',
 		args: {
@@ -84,7 +85,6 @@ var send2bridge = function (frm, print_format, print_type){
 			_lang: "es"
 		},
 		callback: (r) => {
-		    console.log(r)
 			printService.submit({
 				'type': print_type, //this is the label that identifies the printer in WHB's configuration
 				'url': 'file.pdf',
@@ -95,7 +95,7 @@ var send2bridge = function (frm, print_format, print_type){
 }
 ```
 
-This creates a custom button and send the print order to the bridge, via web socket.
+This creates a two custom buttons that send the print order to the bridge, via web socket. Notice that you can send the order to any printer with any print format.
 
 ## Comming features
 1. Print to multiple printers at the same time
