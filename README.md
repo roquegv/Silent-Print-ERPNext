@@ -27,6 +27,7 @@ So, what is proposed with this app is that you can have more flexibility dealing
 So far, this app covers the following scenarios:
 1. Silent Printing from standard Point of Sale (POS)
 2. Silent Printing from any document via Custom Script. In this case, you could have many printers connected to your computer and the app will allow you to print to them silently (see example bellow).
+3. Print from any device (even from the ones that are not connected to the printers)
 
 ## How to install it
 Like any other standard frappe app:
@@ -107,11 +108,49 @@ var send2bridge = function (frm, print_format, print_type){
 
 This creates a two custom buttons that send the print order to the bridge, via web socket. Notice that you can send the order to any printer with any print format.
 
+## Print Silent & Remotely
+This is the same as the last scenario except that does not only print silently but also prints to any printer. This does not require that the printer is in the same LAN. The only requirement is that there sould be a system user that is logged in in the computer that has connection to the printer(s).
+
+In order to set that user, go to the awesomebar and type "Silent Print Settings"; there select the user.
+
+Then, create a new Custom Script, with a following code:
+
+```
+frappe.ui.form.on('POS Invoice', {
+	refresh(frm) {
+		frm.add_custom_button('PRINT SILENT & REMOTELY', () => {send2bridgeRemote(frm, "POS Invoice", "COMANDA")})
+	}
+})
+
+var send2bridgeRemote = function (frm, print_format, print_type){
+	frappe.call({
+		method: 'silent_print.utils.print_format.print_silently',
+		args: {
+			doctype: frm.doc.doctype,
+			name: frm.doc.name,
+			print_format: print_format,
+			print_type: print_type
+		}
+	})
+}
+```
+
+This makes a call to the following function:
+
+```
+@frappe.whitelist()
+def print_silently(doctype, name, print_format, print_type):
+	data = {"doctype": doctype, "name": name, "print_format": print_format, "print_type": print_type}
+	user = frappe.db.get_single_value("Silent Print Settings", "print_user")
+	frappe.publish_realtime("print-silently", data, user)
+```
+This uses the `frappe.publish_realtime` function to send the print order to the user that has printer connection.
+
 ## Comming features
-1. Print to multiple printers at the same time
-2. Print from any device (even from the ones that are not connected to the printers)
-3. Print automatically after some document event (e.g. creation)
-4. POS Awesome integration (?)
+- [x] Print to multiple printers at the same time
+- [x] Print from any device (even from the ones that are not connected to the printers)
+- [ ] Print automatically after some document event (e.g. creation)
+- [ ] POS Awesome integration (?)
 
 #### License
 
