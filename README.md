@@ -6,6 +6,16 @@ This is achieved using the tool called [Webapp Hardware Bridge](https://github.c
 
 ## Why this app is needed?
 
+To print any document, the following steps are required:
+
+1. Click the “print” icon. This opens the print view where you can select the print format, etc
+2. Click the “Print” button. This opens the browser’s print windows (after a while) where you can select the printer, etc
+3. Click the “Print” button in browser’s print windows
+
+That is, at least 3 click as required to print any document. This is a pain for many users, especially those who have many printers/print formats.
+
+For example, in the case of a restaurant, there are two printers, one thermal printer for kitchen and another for invoices printing. Each printer needs specific print format. So, in addition to the above steps, the user has to select the print format and then the desired printer. This makes a a total of almost 7 clicks! In this scenario, the printing process is a real pain for users.
+
 Webapps have their limit when it comes to manipulate user’s hardware (e.i. printer), because the browsers do not allow it for security reasons. When it comes to printer, the only option browsers give is to print silently, that is, the print order will be send to the printer without having to interact with browser's print dialog. In Chrome there is a `--kios-printing` flag and in Firefox there is a `always_print_silent` flag.
 
 However, this has it limit. Once you've selected the printer that will print by default, you can't print with other printers (at least in a easy way). 
