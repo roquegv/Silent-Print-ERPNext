@@ -2,13 +2,21 @@
 
 This is a Frappe App for printing documents silently, that is, without having to interact with browser's print dialog and send the printing order directly to the printer.
 
-This is achieved using the tool called [Webapp Hardware Bridge](https://github.com/imTigger/webapp-hardware-bridge).
+This is achieved using the tool called [Webapp Hardware Bridge](https://github.com/imTigger/webapp-hardware-bridge) (HWB). This is basically a Java program that acts as a bridge between the webapp and hardware (printers and serial ports), accepting websocket request. 
+
+## Why this app is needed?
+
+Webapps have their limit when it comes to manipulate user’s hardware (e.i. printer), because the browsers do not allow it for security reasons. When it comes to printer, the only option browsers give is to print silently, that is, the print order will be send to the printer without having to interact with browser's print dialog. In Chrome there is a `--kios-printing` flag and in Firefox there is a `always_print_silent` flag.
+
+However, this has it limit. Once you've selected the printer that will print by default, you can't print with other printers (at least in a easy way). 
+
+So, what is proposed with this app is that you can have more flexibility dealing with printers.
 
 ## Funtionality
 
 So far, this app covers the following scenarios:
-1. Printing from standard Point of Sale (POS)
-2. Printing from any document via Custom Script
+1. Silent Printing from standard Point of Sale (POS)
+2. Silent Printing from any document via Custom Script. In this case, you could have many printers connected to your computer and the app will allow you to print to them silently (see example bellow).
 
 ## How to install it
 Like any other standard frappe app:
@@ -58,11 +66,12 @@ To be able to print form any document, follow these steps:
 ```
 frappe.ui.form.on('Sales Invoice', {
 	refresh(frm) {
-		frm.add_custom_button('PRINT SILENTLY', () => {send2bridge(frm, "POS Invoice")})
+		frm.add_custom_button('PRINT SILENTLY TO PRINTER 1', () => {send2bridge(frm, "POS Invoice", "PRINTER 1")})
+        frm.add_custom_button('PRINT SILENTLY TO PRINTER 2', () => {send2bridge(frm, "POS Invoice", "PRINTER 2")})
 	}
 })
 
-var send2bridge = function (frm, print_format, print_type = "THERMAL"){
+var send2bridge = function (frm, print_format, print_type){
     // initialice the web socket for the bridge
     var printService = new frappe.silent_print.WebSocketPrinter();
 	frappe.call({
