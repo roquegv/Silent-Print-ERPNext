@@ -1,0 +1,42 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-06-06 15:45:55.786126",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "print_user"
+ ],
+ "fields": [
+  {
+   "description": "The user that is logged in and have connection to the printer(s) in that computer",
+   "fieldname": "print_user",
+   "fieldtype": "Link",
+   "label": "Print User",
+   "options": "User"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2022-06-06 15:45:55.786126",
+ "modified_by": "Administrator",
+ "module": "Silent Print Core",
+ "name": "Silent Print Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

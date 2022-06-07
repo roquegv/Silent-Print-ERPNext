@@ -6,7 +6,7 @@ from frappe import _
 def print_silently(doctype, name, print_format, print_type):
 	data = {"doctype": doctype, "name": name, "print_format": print_format, "print_type": print_type}
 	user = frappe.db.get_single_value("Silent Print Settings", "print_user")
-	frappe.publish_realtime("print-silently", data, user)
+	frappe.publish_realtime("print-silently", data, user=user)
 
 @frappe.whitelist()
 def create_pdf(doctype, name, silent_print_format, doc=None, no_letterhead=0):

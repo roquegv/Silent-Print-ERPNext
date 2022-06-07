@@ -35,40 +35,36 @@ frappe.require('assets/js/point-of-sale.min.js', function() {
 
 $(document).on('app_ready', function () {    
 
-    //TODO: this is a way to avoid the problem that for every tab o windows openned with the system the print order is send. This is not ideal.
-    localStorage.setItem("is_printing", 0)
-    var onLocalStorageEvent = function(e){
-        if(e.key === "is_printing"){
-            if (Number(e.newValue) == 1){
-                var data = JSON.parse(localStorage.getItem("data"))
-                var printService = new frappe.silent_print.WebSocketPrinter();
-                frappe.call({
-                    method: 'silent_print.utils.print_format.create_pdf',
-                    args: {
-                        doctype: data.doctype,
-                        name: data.name,
-                        silent_print_format: data.print_format
-                    },
-                    callback: (r) => {
-                        if (Number(localStorage.getItem("is_printing")) == 1){
-                            localStorage.setItem("is_printing", 0)
-                            printService.submit({
-                                'type': data.print_type,
-                                'url': 'file.pdf',
-                                'file_content': r.message.pdf_base64
-                            });
-                        }
-                        localStorage.setItem("is_printing", 0)
-                    }
-                })
-            }
-        }
-    };
-    window.addEventListener('storage', onLocalStorageEvent, false);
+    $(document).ready(function() {
+        localStorage.setItem("is_printing", 0)
+    })
 
+    //TODO: this is a way to avoid the problem that for every tab o windows openned with the system the print order is send. This is not ideal.
     frappe.realtime.on("print-silently", function(data) {
         localStorage.setItem("data", JSON.stringify(data))
-        localStorage.setItem("is_printing", Number(localStorage.getItem("is_printing")) + 1)
+        
+        if (Number(localStorage.getItem("is_printing")) == 0){
+            localStorage.setItem("is_printing", Number(localStorage.getItem("is_printing")) + 1)
+            var printService = new frappe.silent_print.WebSocketPrinter();
+            frappe.call({
+                method: 'silent_print.utils.print_format.create_pdf',
+                args: {
+                    doctype: data.doctype,
+                    name: data.name,
+                    silent_print_format: data.print_format
+                },
+                callback: (r) => {
+                    if (Number(localStorage.getItem("is_printing")) == 1){
+                        printService.submit({
+                            'type': data.print_type,
+                            'url': 'file.pdf',
+                            'file_content': r.message.pdf_base64
+                        });
+                    }
+                    localStorage.setItem("is_printing", 0)
+                }
+            })
+        }
     });
 })
 
@@ -123,7 +119,6 @@ frappe.silent_print.WebSocketPrinter = function (options) {
     };
 
     this.submit = function (data) {
-        console.log("bufferedAmount",websocket.bufferedAmount);
         if (Array.isArray(data)) {
             data.forEach(function (element) {
                 websocket.send(JSON.stringify(element));
