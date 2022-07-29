@@ -6,7 +6,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "print_user"
+  "print_user",
+  "tab_id"
  ],
  "fields": [
   {
@@ -15,12 +16,17 @@
    "fieldtype": "Link",
    "label": "Print User",
    "options": "User"
+  },
+  {
+   "fieldname": "tab_id",
+   "fieldtype": "Data",
+   "label": "Master Tab ID"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-06-06 15:45:55.786126",
+ "modified": "2022-07-29 14:18:04.577370",
  "modified_by": "Administrator",
  "module": "Silent Print Core",
  "name": "Silent Print Settings",

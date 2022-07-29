@@ -32,38 +32,62 @@ frappe.require('assets/js/point-of-sale.min.js', function() {
     }
 })
 
-
 $(document).on('app_ready', function () {    
 
+    frappe.setMasterTab = function(){
+        frappe.call({
+            method: "silent_print.utils.print_format.set_master_tab",
+            args: {
+                tab_id: window.tab_id
+            }
+        })
+    }
+
+    var printService = new frappe.silent_print.WebSocketPrinter();
+
+    setTimeout(() => {
+        $(".navbar-brand.navbar-home").before('<div id="navbar-printer" class="navbar-center ellipsis" style="color: red; margin-right: 5px;"><i class="fa fa-print" onclick="frappe.setMasterTab()"></i></div>')
+    }, 100);
+
+    frappe.realtime.on("update_master_tab", function(data) {
+        console.log("update_master_tab", data);
+        if (Number(data.tab_id) == Number(window.tab_id)){
+            $("#navbar-printer").css("color", "green")
+        }else{
+            $("#navbar-printer").css("color", "red")
+        }
+    })
+
+    if (window.sessionStorage.tab_id){
+        window.tab_id = window.sessionStorage.tab_id;
+        window.sessionStorage.removeItem("tab_id");
+    }else{
+        window.tab_id = Math.floor(Math.random() * 1000000);
+    }
+
     $(document).ready(function() {
+        
         localStorage.setItem("is_printing", 0)
+
+        window.addEventListener("beforeunload", function (e){
+            window.sessionStorage.tab_id = window.tab_id;
+    
+            return null;
+        });
+
     })
 
     //TODO: this is a way to avoid the problem that for every tab o windows openned with the system the print order is send. This is not ideal.
     frappe.realtime.on("print-silently", function(data) {
-        localStorage.setItem("data", JSON.stringify(data))
-        
-        if (Number(localStorage.getItem("is_printing")) == 0){
-            localStorage.setItem("is_printing", Number(localStorage.getItem("is_printing")) + 1)
-            var printService = new frappe.silent_print.WebSocketPrinter();
-            frappe.call({
-                method: 'silent_print.utils.print_format.create_pdf',
-                args: {
-                    doctype: data.doctype,
-                    name: data.name,
-                    silent_print_format: data.print_format
-                },
-                callback: (r) => {
-                    if (Number(localStorage.getItem("is_printing")) == 1){
-                        printService.submit({
-                            'type': data.print_type,
-                            'url': 'file.pdf',
-                            'file_content': r.message.pdf_base64
-                        });
-                    }
-                    localStorage.setItem("is_printing", 0)
-                }
-            })
+        console.log("tab_id", Number(data.tab_id), Number(window.tab_id), Number(data.tab_id) === Number(window.tab_id));
+        console.log(data);
+        if (Number(data.tab_id) == Number(window.tab_id)){
+            
+            printService.submit({
+                'type': data.print_type,
+                'url': 'file.pdf',
+                'file_content': data.pdf
+            });
         }
     });
 })
