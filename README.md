@@ -144,7 +144,9 @@ def print_silently(doctype, name, print_format, print_type):
 	user = frappe.db.get_single_value("Silent Print Settings", "print_user")
 	frappe.publish_realtime("print-silently", data, user)
 ```
-This uses the `frappe.publish_realtime` function to send the print order to the user that has printer connection.
+This uses the `frappe.publish_realtime` function to send the print order to the user that has printer connection. This feature send message to every browser's tab in which the app is open. In order to avoid multiple printing (one by every tab), it's important to set a master tab that will finally send the print order. In order to do this, this app adds a icon next to the Frappe/ERPNext logo in the navbar, so when this icon in clicked, it will tell the app that this is the master tab, and the icon will turn into green.
+
+![Master tab Icon for remote silent print](master-tab-icon.png)
 
 ## Comming features
 - [x] Print to multiple printers at the same time
